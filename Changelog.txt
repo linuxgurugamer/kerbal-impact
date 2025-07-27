@@ -1,6 +1,13 @@
 Changelog
 
-1.9.0 (unreleased)
+1.9.1 (unreleased)
+	Added new field to Spectrometer module: situationMask
+	Added code which checks the situationMask of the part against the situation the vessel is in to verify vessel is in correct situation for that part (needed for new part)
+	Created temporary high altitude part (for testing)
+	Added code to deploy/retract the movable parts on a spectrograph
+
+
+1.9.0
 	Adoption by Linuxurugamer
 	Removed MiniAVC.dll
 	Updated for 1.12.x

@@ -2,6 +2,7 @@
 using KSP.UI.Screens.Flight.Dialogs;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace kerbal_impact
 {
@@ -9,6 +10,76 @@ namespace kerbal_impact
     {
         [KSPField(guiActive = true, guiActiveEditor = true, guiName = "Spectrometer Status", guiUnits = "", isPersistant = true)]
         public string statusText = "   No data";
+
+        [KSPField]
+        public int situationMask = 16; // Default to low orbit
+
+        [KSPField]
+        public bool deployable = false; // Default to low orbit
+
+        [KSPField(isPersistant = true)]
+        public bool deployed = false;
+
+        [KSPField(guiActive = true, guiActiveEditor = true, guiName = "Deployment Status", guiUnits = "", isPersistant = true)]
+        public string deploymentStatus = ":   Retracted";
+
+        [KSPField]
+        public string animationName = "";
+        [KSPField]
+        public float customAnimationSpeed = 1f;
+
+
+        private Animation anim;
+
+
+        [KSPEvent(guiName = "Deploy Spectrometer", guiActive = true, guiActiveEditor = true, active = true)]
+        public void DeployEvent()
+        {
+            if (!deployed)
+                Deploy();
+            else
+                Retract();
+        }
+
+        [KSPAction("Deploy Spectrometer")]
+        public void DeployAction(KSPActionParam param)
+        {
+            if (!deployed)
+                Deploy();
+            else
+                Retract();
+        }
+
+        void Deploy()
+        {
+            deployed = true;
+            deploymentStatus = ":   Deployed";
+            Actions["DeployAction"].guiName =
+                Events["DeployEvent"].guiName = "Retract Spectrometer";
+            if (animationName != "")
+            {
+                anim[animationName].speed = 1f * customAnimationSpeed;
+                if (anim[animationName].normalizedTime == 0f || anim[animationName].normalizedTime == 1f)
+                    anim[animationName].normalizedTime = 0f;
+                anim.Play(animationName);
+
+            }
+        }
+
+        void Retract()
+        {
+            deployed = false;
+            deploymentStatus = ":   Retracted";
+            Actions["DeployAction"].guiName =
+                Events["DeployEvent"].guiName = "Deploy Spectrometer";
+            if (animationName != "")
+            {
+                anim[animationName].speed = -1f * customAnimationSpeed;
+                if (anim[animationName].normalizedTime == 0f || anim[animationName].normalizedTime == 1f)
+                    anim[animationName].normalizedTime = 0f;
+                anim.Play(animationName);
+            }
+        }
 
 
         protected ImpactScienceData result;
@@ -23,6 +94,24 @@ namespace kerbal_impact
                 ConfigNode storedDataNode = node.GetNode("ScienceData");
                 ImpactScienceData data = new ImpactScienceData(storedDataNode);
                 result = data;
+            }
+            if (!deployable)
+            {
+                Actions["DeployAction"].active = false;
+                Events["DeployEvent"].active = Events["DeployEvent"].guiActive = false;
+                Fields["deploymentStatus"].guiActive = false;
+            }
+        }
+
+        public override void OnStart(PartModule.StartState state)
+        {
+            if (animationName != "")
+            {
+                anim = part.FindModelAnimators(animationName).FirstOrDefault();
+                if (anim == null)
+                {
+                    animationName = "";
+                }
             }
         }
 

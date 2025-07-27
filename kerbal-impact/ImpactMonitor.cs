@@ -224,6 +224,12 @@ namespace kerbal_impact
 
         }
 
+        private bool IsInSituation(Vessel observer, ExperimentSituations situationMask)
+        {
+           ExperimentSituations i = ScienceUtil.GetExperimentSituation(observer);
+            return ((int)i & (int)situationMask) >0;
+        }
+
         private void orbitingVessel(CelestialBody crashBody, Vessel observer, Vessel crashVessel)
         {
             Log("And it is orbiting");
@@ -248,11 +254,20 @@ namespace kerbal_impact
                     List<Spectrometer> spectrometers = observer.FindPartModulesImplementing<Spectrometer>();
                     if (spectrometers.Count != 0)
                     {
-                        Log("Found spectrometers");
-                        ImpactScienceData data = createSpectralData(crashBody, crashVessel, spectrometers[0].part.flightID);
-                        ImpactCoordinator.getInstance().bangListeners.Fire(data);
-                        spectrometers[0].addExperiment(data);
-
+                        foreach (var s in spectrometers)
+                        {
+                            Log("Found spectrometers, part: " + s.part.partName);
+                            Log("vessel: " + observer.name + ", situationMask: " + s.situationMask);
+                            if ((s.deployable && s.deployed) || !s.deployable)
+                            {
+                                if (IsInSituation(observer, (ExperimentSituations)s.situationMask))
+                                {
+                                    ImpactScienceData data = createSpectralData(crashBody, crashVessel, spectrometers[0].part.flightID);
+                                    ImpactCoordinator.getInstance().bangListeners.Fire(data);
+                                    spectrometers[0].addExperiment(data);
+                                }
+                            }
+                        }
                     }
                 }
                 else
@@ -264,19 +279,31 @@ namespace kerbal_impact
                         {
                             if (mod.moduleName == "Spectrometer")
                             {
-                                Log("Found spectrometers");
-                                ImpactScienceData data = createSpectralData(crashBody, crashVessel, snap.flightID);
-                                Log("about to call listeners");
-                                ImpactCoordinator.getInstance().bangListeners.Fire(data);
-                                Log("About to call newresult");
-                                Spectrometer.NewResult(mod.moduleValues, data);
-                                return;
+                                Spectrometer s = mod.moduleRef as Spectrometer;
+
+                                Log("Found spectrometer, part: "  + snap.partName);
+                                Log("vessel: " + observer.name + ", situationMask: " + s.situationMask);
+                                Log("is deployable: " + s.deployable + ", is deployed: " + s.deployed);
+                                if ((s.deployable && s.deployed) || !s.deployable)
+                                {
+                                    if (IsInSituation(observer, (ExperimentSituations)s.situationMask))
+                                    {
+                                        Log("Found spectrometers, in good situation");
+                                        ImpactScienceData data = createSpectralData(crashBody, crashVessel, snap.flightID);
+                                        Log("about to call listeners");
+                                        ImpactCoordinator.getInstance().bangListeners.Fire(data);
+                                        Log("About to call newresult");
+                                        Spectrometer.NewResult(mod.moduleValues, data);
+                                        continue;
+                                    }
+                                }
                             }
                         }
                     }
                 }
             }
         }
+
 
         private static ImpactScienceData createSeismicData(CelestialBody crashBody, Vessel crashVessel, uint flightID)
         {
