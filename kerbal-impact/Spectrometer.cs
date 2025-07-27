@@ -1,5 +1,6 @@
 ﻿using KSP.Localization;
 using KSP.UI.Screens.Flight.Dialogs;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -25,9 +26,18 @@ namespace kerbal_impact
 
         [KSPField]
         public string animationName = "";
+
         [KSPField]
         public float customAnimationSpeed = 1f;
 
+        [KSPField]
+        public string startEventGUIName = "Deploy Spectrometer";
+
+        [KSPField]
+        public string endEventGUIName = "Retract Spectrometer";
+
+        [KSPField]
+        public string actionGUIName = "Toggle Spectrometer";
 
         private Animation anim;
 
@@ -41,8 +51,8 @@ namespace kerbal_impact
                 Retract();
         }
 
-        [KSPAction("Deploy Spectrometer")]
-        public void DeployAction(KSPActionParam param)
+        [KSPAction("Toggle Spectrometer")]
+        public void ToggleAction(KSPActionParam param)
         {
             if (!deployed)
                 Deploy();
@@ -53,34 +63,53 @@ namespace kerbal_impact
         void Deploy()
         {
             deployed = true;
-            deploymentStatus = ":   Deployed";
-            Actions["DeployAction"].guiName =
-                Events["DeployEvent"].guiName = "Retract Spectrometer";
+            deploymentStatus = ":   Deploying";
+            finalDeploymentStatus = ":   Deployed";
+            Actions["ToggleAction"].guiName = actionGUIName;
+            Events["DeployEvent"].guiName = endEventGUIName;
             if (animationName != "")
             {
                 anim[animationName].speed = 1f * customAnimationSpeed;
-                if (anim[animationName].normalizedTime == 0f || anim[animationName].normalizedTime == 1f)
-                    anim[animationName].normalizedTime = 0f;
+                //if (anim[animationName].normalizedTime == 0f || anim[animationName].normalizedTime == 1f)
+                //    anim[animationName].normalizedTime = 0f;
                 anim.Play(animationName);
-
+                StartCoroutine("SlowUpdate");
             }
         }
 
+        string finalDeploymentStatus = "";
         void Retract()
         {
             deployed = false;
-            deploymentStatus = ":   Retracted";
-            Actions["DeployAction"].guiName =
-                Events["DeployEvent"].guiName = "Deploy Spectrometer";
+            deploymentStatus = ":   Retracting";
+            finalDeploymentStatus = ":   Retracted";
+            Actions["ToggleAction"].guiName = actionGUIName;
+            Events["DeployEvent"].guiName = startEventGUIName;
             if (animationName != "")
             {
                 anim[animationName].speed = -1f * customAnimationSpeed;
-                if (anim[animationName].normalizedTime == 0f || anim[animationName].normalizedTime == 1f)
-                    anim[animationName].normalizedTime = 0f;
+                //if (anim[animationName].normalizedTime == 0f || anim[animationName].normalizedTime == 1f)
+                //    anim[animationName].normalizedTime = 1f;
+                if (!anim.isPlaying)
+                    anim[animationName].normalizedTime = 1f;
                 anim.Play(animationName);
+                StartCoroutine("SlowUpdate");
             }
         }
+        IEnumerator SlowUpdate()
+        {
+            Events["DeployEvent"].active = Events["DeployEvent"].guiActive = false;
 
+            while (anim.isPlaying)
+            {
+                yield return new WaitForSeconds(0.25f);
+            }
+            deploymentStatus = finalDeploymentStatus;
+            finalDeploymentStatus = "";
+            Events["DeployEvent"].active =
+                Events["DeployEvent"].guiActive = true;
+            yield return null;
+        }
 
         protected ImpactScienceData result;
         //TODO I think this should be a list
@@ -97,7 +126,7 @@ namespace kerbal_impact
             }
             if (!deployable)
             {
-                Actions["DeployAction"].active = false;
+                Actions["ToggleAction"].active = false;
                 Events["DeployEvent"].active = Events["DeployEvent"].guiActive = false;
                 Fields["deploymentStatus"].guiActive = false;
             }
