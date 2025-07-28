@@ -62,11 +62,7 @@ namespace kerbal_impact
 
         void Deploy()
         {
-            deployed = true;
-            deploymentStatus = ":   Deploying";
-            finalDeploymentStatus = ":   Deployed";
-            Actions["ToggleAction"].guiName = actionGUIName;
-            Events["DeployEvent"].guiName = endEventGUIName;
+            SetDeploying();
             if (animationName != "")
             {
                 anim[animationName].speed = 1f * customAnimationSpeed;
@@ -75,6 +71,22 @@ namespace kerbal_impact
                 anim.Play(animationName);
                 StartCoroutine("SlowUpdate");
             }
+        }
+
+        void SetDeploying()
+        { 
+            deployed = true;
+            deploymentStatus = ":   Deploying";
+            finalDeploymentStatus = ":   Deployed";
+            Actions["ToggleAction"].guiName = actionGUIName;
+            Events["DeployEvent"].guiName = endEventGUIName;
+        }
+        void SetDeployed()
+        {
+            deploymentStatus = finalDeploymentStatus;
+            finalDeploymentStatus = "";
+            Events["DeployEvent"].active =
+                Events["DeployEvent"].guiActive = true;
         }
 
         string finalDeploymentStatus = "";
@@ -104,10 +116,7 @@ namespace kerbal_impact
             {
                 yield return new WaitForSeconds(0.25f);
             }
-            deploymentStatus = finalDeploymentStatus;
-            finalDeploymentStatus = "";
-            Events["DeployEvent"].active =
-                Events["DeployEvent"].guiActive = true;
+            SetDeployed();
             yield return null;
         }
 
@@ -141,6 +150,16 @@ namespace kerbal_impact
                 {
                     animationName = "";
                 }
+
+                if (deployed)
+                {
+                    SetDeploying();
+                    SetDeployed();
+
+                    anim[animationName].speed =  customAnimationSpeed;
+                    anim[animationName].normalizedTime = 1f;
+                    anim.Play(animationName);
+                }
             }
         }
 
@@ -164,6 +183,9 @@ namespace kerbal_impact
 
         internal static void NewResult(ConfigNode node, ImpactScienceData newData)
         {
+            ImpactMonitor.Log("Spectrometer.NewResult, kineticEnergy: " + newData.kineticEnergy + ", biome: " + newData.biome + ", latitude: " + newData.latitude +
+                ", datatype: " + newData.datatype + ", situationMask: " + newData.situationMask);
+
             //only replace if it is better than any existing results
             if (node.HasNode("ScienceData"))
             {
@@ -193,14 +215,16 @@ namespace kerbal_impact
             if (data != null)
             {
 
-                if (result == null)
+                if (result == null || data.dataAmount > result.dataAmount)
                 {
                     result = data as ImpactScienceData;
                 }
+#if false
                 else if (data.dataAmount > result.dataAmount)
                 {
                     result = data as ImpactScienceData;
                 }
+#endif
             }
 
             return;
@@ -218,7 +242,7 @@ namespace kerbal_impact
 
         public bool IsRerunnable()
         {
-            return false;
+            return true;
         }
 
         public int GetScienceCount()
@@ -228,12 +252,14 @@ namespace kerbal_impact
 
         public void ReviewDataItem(ScienceData sd)
         {
-            ScienceLabSearch labSearch = new ScienceLabSearch(null, sd);
+            ScienceLabSearch labSearch = new ScienceLabSearch(part.vessel, sd);
             expDialog = ExperimentsResultDialog.DisplayResult(new ExperimentResultDialogPage(part, sd, 1f, 0f, false, "", true, labSearch, DumpData, KeepData, TransmitData, null));
         }
 
         public void ReviewData()
         {
+            ImpactMonitor.Log("ReviewData, GetScienceCount(): " + GetScienceCount());
+
             if (GetScienceCount() < 1)
                 return;
             if (expDialog != null)
@@ -260,6 +286,7 @@ namespace kerbal_impact
 
         public void DumpData(ScienceData data)
         {
+            ImpactMonitor.Log("DumpData");
             expDialog = null;
             result = null;
         }
@@ -270,6 +297,7 @@ namespace kerbal_impact
         }
         public void TransmitData(ScienceData data)
         {
+            ImpactMonitor.Log("TransmitData");
             expDialog = null;
             List<IScienceDataTransmitter> tranList = vessel.FindPartModulesImplementing<IScienceDataTransmitter>();
             if (tranList.Count > 0 && result != null)

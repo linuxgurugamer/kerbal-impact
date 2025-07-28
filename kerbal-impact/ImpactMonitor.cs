@@ -262,9 +262,9 @@ namespace kerbal_impact
                             {
                                 if (IsInSituation(observer, (ExperimentSituations)s.situationMask))
                                 {
-                                    ImpactScienceData data = createSpectralData(crashBody, crashVessel, spectrometers[0].part.flightID);
+                                    ImpactScienceData data = createSpectralData(crashBody, crashVessel, s.part.flightID, s.situationMask);
                                     ImpactCoordinator.getInstance().bangListeners.Fire(data);
-                                    spectrometers[0].addExperiment(data);
+                                    s.addExperiment(data);
                                 }
                             }
                         }
@@ -289,7 +289,7 @@ namespace kerbal_impact
                                     if (IsInSituation(observer, (ExperimentSituations)s.situationMask))
                                     {
                                         Log("Found spectrometers, in good situation");
-                                        ImpactScienceData data = createSpectralData(crashBody, crashVessel, snap.flightID);
+                                        ImpactScienceData data = createSpectralData(crashBody, crashVessel, snap.flightID, s.situationMask);
                                         Log("about to call listeners");
                                         ImpactCoordinator.getInstance().bangListeners.Fire(data);
                                         Log("About to call newresult");
@@ -328,7 +328,7 @@ namespace kerbal_impact
             ImpactScienceData data = new ImpactScienceData(ImpactScienceData.DataTypes.Seismic,
                 (float)crashEnergy, null, crashVessel.latitude,
                 (float)(science * subject.dataScale), 1f, 0, subject.id,
-                Localizer.Format(flavourText, energyFormat(crashEnergy), crashBody.GetDisplayName()), false, flightID);
+                Localizer.Format(flavourText, energyFormat(crashEnergy), crashBody.GetDisplayName()), false, flightID, ExperimentSituations.SrfLanded);
 
             ScreenMessages.PostScreenMessage(
                 Localizer.Format("#autoLOC_Screen_Seismic", energyFormat(crashEnergy), crashBody.GetDisplayName()),
@@ -338,35 +338,44 @@ namespace kerbal_impact
             return data;
         }
 
-        private static ImpactScienceData createSpectralData(CelestialBody crashBody, Vessel crashVessel, uint flightID)
+        private static ImpactScienceData createSpectralData(CelestialBody crashBody, Vessel crashVessel, uint flightID, int situationMask)
         {
             double crashVelocity = crashVessel.srf_velocity.magnitude;
             Log("Velocity=" + crashVelocity);
             float crashMasss = crashVessel.GetTotalMass() * 1000;
-            double crashEnergy = 0.5 * crashMasss * crashVelocity * crashVelocity; //KE of crash
+            //double crashEnergy = 0.5 * crashMasss * crashVelocity * crashVelocity; //KE of crash
 
             ScienceExperiment experiment = ResearchAndDevelopment.GetExperiment("ImpactSpectrometer");
             String biome = ScienceUtil.GetExperimentBiome(crashBody, crashVessel.latitude, crashVessel.longitude);
             CBAttributeMapSO m = crashBody.BiomeMap;
             CBAttributeMapSO.MapAttribute[] atts = m.Attributes;
-            ScienceSubject subject = ResearchAndDevelopment.GetExperimentSubject(experiment, ExperimentSituations.InSpaceLow, crashBody, biome, biome);
-            double science = subject.scienceCap;
-            Log("Impact took place in " + biome + " at " + crashVessel.latitude + "," + crashVessel.longitude);
-            String flavourText = "Impact at <<1>> on <<2>>";
+            //ScienceSubject subject = ResearchAndDevelopment.GetExperimentSubject(experiment, ExperimentSituations.InSpaceLow, crashBody, biome, biome);
+            ScienceSubject subject = null;
+            if ((situationMask & (int)ExperimentSituations.InSpaceLow) != 0)
+                subject = ResearchAndDevelopment.GetExperimentSubject(experiment, ExperimentSituations.InSpaceLow, crashBody, biome, biome);
+            if ((situationMask & (int)ExperimentSituations.InSpaceHigh) != 0)
+                subject = ResearchAndDevelopment.GetExperimentSubject(experiment, ExperimentSituations.InSpaceHigh, crashBody, biome, biome);
+            if (subject != null)
+            {
+                double science = subject.scienceCap;
+                Log("Impact took place in " + biome + " at " + crashVessel.latitude + "," + crashVessel.longitude);
+                String flavourText = "Impact at <<1>> on <<2>>";
 
-            science = Math.Max(0, science - subject.science);
-            science /= subject.subjectValue;
+                science = Math.Max(0, science - subject.science);
+                science /= subject.subjectValue;
 
-            ImpactScienceData data = new ImpactScienceData(ImpactScienceData.DataTypes.Spectral,
-                0, biome, crashVessel.latitude,
-                (float)(science * subject.dataScale), 1f, 0, subject.id,
-                Localizer.Format(flavourText, biome, crashBody.GetDisplayName()), false, flightID);
+                Log("subject.science: " + subject.science + ", subject.subjectValue: " + subject.subjectValue + ", science: " + science);
+                ImpactScienceData data = new ImpactScienceData(ImpactScienceData.DataTypes.Spectral,
+                    0, biome, crashVessel.latitude,
+                    (float)(science * subject.dataScale), 1f, 0, subject.id,
+                    Localizer.Format(flavourText, biome, crashBody.GetDisplayName()), false, flightID, (ExperimentSituations)situationMask);
 
-            ScreenMessages.PostScreenMessage(
-                Localizer.Format("#autoLOC_Screen_Spectrum", biome, crashBody.GetDisplayName()),
-                5.0f, ScreenMessageStyle.UPPER_RIGHT);
-
-            return data;
+                ScreenMessages.PostScreenMessage(
+                    Localizer.Format("#autoLOC_Screen_Spectrum", biome, crashBody.GetDisplayName()),
+                    5.0f, ScreenMessageStyle.UPPER_RIGHT);
+             return data;
+           }
+            return null;
         }
 
         private static ImpactScienceData createAsteroidSpectralData(CelestialBody crashBody, Vessel asteroid, Vessel crashVessel, uint flightID)

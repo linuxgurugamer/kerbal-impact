@@ -1,5 +1,9 @@
 Changelog
 
+1.9.1.1
+	Made experiments rerunnable, so you can run multiple impacts without needing multiple science instruments
+	Fixed issue with the sci-impact-spectrometers3 not getting data
+
 1.9.1
 	Added new field to Spectrometer module: situationMask
 	Added code which checks the situationMask of the part against the situation the vessel is in to verify vessel is in correct situation for that part (needed for new part)

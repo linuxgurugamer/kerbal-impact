@@ -19,6 +19,7 @@ namespace kerbal_impact
         public string biome { get; private set; }
         public double latitude { get; private set; }
         public string asteroid { get; private set; }
+        public ExperimentSituations situationMask { get; private set; }
         public DataTypes datatype { get; private set; }
 
         public ImpactScienceData(ConfigNode node) : base(node)
@@ -26,13 +27,14 @@ namespace kerbal_impact
             LoadImpact(node);
         }
 
-		public ImpactScienceData(DataTypes dataType, float energy, String biome, double latitude, float amount, float xmitValue, float labBoost, String id, String dataname, bool triggered, uint flightID)
+		public ImpactScienceData(DataTypes dataType, float energy, String biome, double latitude, float amount, float xmitValue, float labBoost, String id, String dataname, bool triggered, uint flightID, ExperimentSituations situationMask)
 			: base(amount, xmitValue, labBoost, id, dataname, triggered, flightID)
         {
             this.datatype = dataType;
             kineticEnergy = energy;
             this.biome = biome;
             this.latitude = latitude;
+            this.situationMask = situationMask;
         }
 		public ImpactScienceData(float energy, String asteroid, float amount, float xmitValue, float labBoost, String id, String dataname, bool triggered, uint flightID)
 			: base(amount, xmitValue, labBoost, id, dataname, triggered, flightID)

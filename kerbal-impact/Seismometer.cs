@@ -97,7 +97,7 @@ namespace kerbal_impact
 
         public bool IsRerunnable()
         {
-            return false;
+            return true;
         }
 
         public int GetScienceCount()
