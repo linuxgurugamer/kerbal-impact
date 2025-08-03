@@ -1,4 +1,5 @@
-﻿using KSP.Localization;
+﻿using CommNet.Network;
+using KSP.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -121,23 +122,26 @@ namespace kerbal_impact
             //find all craft orbiting and landed at this body
             foreach (Vessel vessel in FlightGlobals.Vessels.Where(v => v.orbit.referenceBody == crashBody))
             {
-                Log("Found a vessel " + vessel.GetName());
-                if (asteroid == null)
+                if (vessel.id != crashVessel.id)
                 {
-                    if (vessel.situation == Vessel.Situations.LANDED)
+                    Log("Found a vessel " + vessel.GetName());
+                    if (asteroid == null)
                     {
-                        landedVessel(crashBody, vessel, crashVessel);
+                        if (vessel.situation == Vessel.Situations.LANDED)
+                        {
+                            landedVessel(crashBody, vessel, crashVessel);
+                        }
+                        if (vessel.situation == Vessel.Situations.ORBITING)
+                        {
+                            orbitingVessel(crashBody, vessel, crashVessel);
+                        }
                     }
-                    if (vessel.situation == Vessel.Situations.ORBITING)
+                    else
                     {
-                        orbitingVessel(crashBody, vessel, crashVessel);
-                    }
-                }
-                else
-                {
-                    if (vessel.situation == Vessel.Situations.ORBITING)
-                    {
-                        nearAsteroidVessel(vessel, crashVessel, asteroid, crashBody);
+                        if (vessel.situation == Vessel.Situations.ORBITING)
+                        {
+                            nearAsteroidVessel(vessel, crashVessel, asteroid, crashBody);
+                        }
                     }
                 }
             }
@@ -226,8 +230,8 @@ namespace kerbal_impact
 
         private bool IsInSituation(Vessel observer, ExperimentSituations situationMask)
         {
-           ExperimentSituations i = ScienceUtil.GetExperimentSituation(observer);
-            return ((int)i & (int)situationMask) >0;
+            ExperimentSituations i = ScienceUtil.GetExperimentSituation(observer);
+            return ((int)i & (int)situationMask) > 0;
         }
 
         private void orbitingVessel(CelestialBody crashBody, Vessel observer, Vessel crashVessel)
@@ -251,20 +255,24 @@ namespace kerbal_impact
                 Log("Vessel is visible");
                 if (observer.loaded)
                 {
+                    Log("Vessel is loaded");
+
                     List<Spectrometer> spectrometers = observer.FindPartModulesImplementing<Spectrometer>();
                     if (spectrometers.Count != 0)
                     {
                         foreach (var s in spectrometers)
                         {
-                            Log("Found spectrometers, part: " + s.part.partName);
-                            Log("vessel: " + observer.name + ", situationMask: " + s.situationMask);
-                            if ((s.deployable && s.deployed) || !s.deployable)
+                            if (s != null)
                             {
-                                if (IsInSituation(observer, (ExperimentSituations)s.situationMask))
+                                Log("vessel: " + observer.name + ", situationMask: " + s.situationMask);
+                                if ((s.deployable && s.deployed) || !s.deployable)
                                 {
-                                    ImpactScienceData data = createSpectralData(crashBody, crashVessel, s.part.flightID, s.situationMask);
-                                    ImpactCoordinator.getInstance().bangListeners.Fire(data);
-                                    s.addExperiment(data);
+                                    if (IsInSituation(observer, (ExperimentSituations)s.situationMask))
+                                    {
+                                        ImpactScienceData data = createSpectralData(crashBody, crashVessel, s.part.flightID, s.situationMask);
+                                        ImpactCoordinator.getInstance().bangListeners.Fire(data);
+                                        s.addExperiment(data);
+                                    }
                                 }
                             }
                         }
@@ -272,6 +280,7 @@ namespace kerbal_impact
                 }
                 else
                 {
+                    Log("Vessel is unloaded");
                     List<ProtoPartSnapshot> parts = observer.protoVessel.protoPartSnapshots;
                     foreach (ProtoPartSnapshot snap in parts)
                     {
@@ -279,17 +288,26 @@ namespace kerbal_impact
                         {
                             if (mod.moduleName == "Spectrometer")
                             {
-                                Spectrometer s = mod.moduleRef as Spectrometer;
+                                Log("Found spectrometer, part: " + snap.partName);
 
-                                Log("Found spectrometer, part: "  + snap.partName);
-                                Log("vessel: " + observer.name + ", situationMask: " + s.situationMask);
-                                Log("is deployable: " + s.deployable + ", is deployed: " + s.deployed);
-                                if ((s.deployable && s.deployed) || !s.deployable)
+                                bool deployable = false;
+                                bool deployed = false;
+                                int situationMask = 0;
+
+                                if (mod.moduleValues.HasValue("deployable"))
+                                    deployable = bool.Parse(mod.moduleValues.GetValue("deployable"));
+                                if (mod.moduleValues.HasValue("deployed"))
+                                    deployed = bool.Parse(mod.moduleValues.GetValue("deployed"));
+                                if (mod.moduleValues.HasValue("situationMask"))
+                                    situationMask = int.Parse(mod.moduleValues.GetValue("situationMask"));
+
+                                Log("vessel: " + observer.name + ", situationMask: " + situationMask + ", is deployable: " + deployable + ", is deployed: " + deployed);
+                                if ((deployable && deployed) || !deployable)
                                 {
-                                    if (IsInSituation(observer, (ExperimentSituations)s.situationMask))
+                                    if (IsInSituation(observer, (ExperimentSituations)situationMask))
                                     {
                                         Log("Found spectrometers, in good situation");
-                                        ImpactScienceData data = createSpectralData(crashBody, crashVessel, snap.flightID, s.situationMask);
+                                        ImpactScienceData data = createSpectralData(crashBody, crashVessel, snap.flightID, situationMask);
                                         Log("about to call listeners");
                                         ImpactCoordinator.getInstance().bangListeners.Fire(data);
                                         Log("About to call newresult");
@@ -351,10 +369,12 @@ namespace kerbal_impact
             CBAttributeMapSO.MapAttribute[] atts = m.Attributes;
             //ScienceSubject subject = ResearchAndDevelopment.GetExperimentSubject(experiment, ExperimentSituations.InSpaceLow, crashBody, biome, biome);
             ScienceSubject subject = null;
+
             if ((situationMask & (int)ExperimentSituations.InSpaceLow) != 0)
                 subject = ResearchAndDevelopment.GetExperimentSubject(experiment, ExperimentSituations.InSpaceLow, crashBody, biome, biome);
             if ((situationMask & (int)ExperimentSituations.InSpaceHigh) != 0)
                 subject = ResearchAndDevelopment.GetExperimentSubject(experiment, ExperimentSituations.InSpaceHigh, crashBody, biome, biome);
+
             if (subject != null)
             {
                 double science = subject.scienceCap;
@@ -373,8 +393,8 @@ namespace kerbal_impact
                 ScreenMessages.PostScreenMessage(
                     Localizer.Format("#autoLOC_Screen_Spectrum", biome, crashBody.GetDisplayName()),
                     5.0f, ScreenMessageStyle.UPPER_RIGHT);
-             return data;
-           }
+                return data;
+            }
             return null;
         }
 
@@ -383,7 +403,7 @@ namespace kerbal_impact
             double crashVelocity = crashVessel.srf_velocity.magnitude;
             Log("Velocity=" + crashVelocity);
             float crashMasss = crashVessel.GetTotalMass() * 1000;
-            double crashEnergy = 0.5 * crashMasss * crashVelocity * crashVelocity; //KE of crash
+            //double crashEnergy = 0.5 * crashMasss * crashVelocity * crashVelocity; //KE of crash
 
             ScienceExperiment experiment = ResearchAndDevelopment.GetExperiment("AsteroidSpectometry");
             ExperimentSituations situation = ScienceUtil.GetExperimentSituation(asteroid);
@@ -396,9 +416,15 @@ namespace kerbal_impact
 
             science /= subject.subjectValue;
 
-            ImpactScienceData data = new ImpactScienceData(0, asteroid.GetName(),
-                (float)(science * subject.dataScale), 1f, 0, subject.id,
-                Localizer.Format(flavourText, asteroid.GetName(), crashBody.GetDisplayName()), false, flightID);
+            ImpactScienceData data = new ImpactScienceData(0,
+                                                            asteroid.GetName(),
+                                                            (float)(science * subject.dataScale),
+                                                            1f,
+                                                            0,
+                                                            subject.id,
+                                                            Localizer.Format(flavourText, asteroid.GetName(), crashBody.GetDisplayName()),
+                                                            false,
+                                                            flightID);
 
             ScreenMessages.PostScreenMessage(
                 Localizer.Format("#autoLOC_Screen_Asteroid", asteroid.GetName(), crashBody.GetDisplayName()),

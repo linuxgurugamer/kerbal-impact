@@ -1,5 +1,9 @@
 Changelog
 
+1.9.1.2 
+	updated log line for spectrometric data to add data amount
+	Changed method of accessing unloaded Spectrometer modules to avoid NullRef Exceptions which happened some of the time
+
 1.9.1.1
 	Made experiments rerunnable, so you can run multiple impacts without needing multiple science instruments
 	Fixed issue with the sci-impact-spectrometers3 not getting data

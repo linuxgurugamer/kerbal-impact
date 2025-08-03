@@ -12,7 +12,7 @@ namespace kerbal_impact
         [KSPField(guiActive = true, guiActiveEditor = true, guiName = "Spectrometer Status", guiUnits = "", isPersistant = true)]
         public string statusText = "   No data";
 
-        [KSPField]
+        [KSPField(isPersistant = true)]
         public int situationMask = 16; // Default to low orbit
 
         [KSPField]
@@ -183,7 +183,7 @@ namespace kerbal_impact
 
         internal static void NewResult(ConfigNode node, ImpactScienceData newData)
         {
-            ImpactMonitor.Log("Spectrometer.NewResult, kineticEnergy: " + newData.kineticEnergy + ", biome: " + newData.biome + ", latitude: " + newData.latitude +
+            ImpactMonitor.Log("Spectrometer.NewResult, kineticEnergy: " + newData.kineticEnergy + ", dataAmount: " + newData.dataAmount+ ", biome: " + newData.biome + ", latitude: " + newData.latitude +
                 ", datatype: " + newData.datatype + ", situationMask: " + newData.situationMask);
 
             //only replace if it is better than any existing results
