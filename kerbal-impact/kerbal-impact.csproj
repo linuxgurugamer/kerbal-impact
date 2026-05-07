@@ -26,7 +26,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -47,14 +47,32 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>AssemblyVersion.tt</DependentUpon>
     </Compile>
+    <Compile Include="AsteroidDensityReader .cs" />
+    <Compile Include="AsteroidImpactSensor.cs" />
+    <Compile Include="AsteroidSpectrumContract.cs" />
+    <Compile Include="Cannon.cs" />
+    <Compile Include="Densimeter.cs" />
+    <Compile Include="GUIUtils.cs" />
+    <Compile Include="DensityImpactContract.cs" />
     <Compile Include="ImpactCoordinator.cs" />
+    <Compile Include="ImpactNodeController.cs" />
+    <Compile Include="ImpactParameter.cs" />
     <Compile Include="ImpactScienceData.cs" />
     <Compile Include="ImpactContract.cs" />
     <Compile Include="ImpactMonitor.cs" />
     <Compile Include="InstallChecker.cs" />
     <Compile Include="KerbalImpact.cs" />
+    <Compile Include="KineticImpactor.cs" />
+    <Compile Include="KineticImpactorExperiment.cs" />
+    <Compile Include="LoadedVesselSwitcher.cs" />
+    <Compile Include="ReturnToObserver.cs" />
+    <Compile Include="ScienceReceiptParameter.cs" />
+    <Compile Include="SeismicContract.cs" />
+    <Compile Include="Settings.cs" />
+    <Compile Include="SpawnConfig.cs" />
     <Compile Include="Spectrometer.cs" />
     <Compile Include="Seismometer.cs" />
+    <Compile Include="SpectrumContract.cs" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

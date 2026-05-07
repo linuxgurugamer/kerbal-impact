@@ -1,5 +1,5 @@
 
-@echo off
+rem @echo off
 
 rem H is the destination game folder
 rem GAMEDIR is the name of the mod folder (usually the mod name)
@@ -9,7 +9,7 @@ rem    but not always
 
 set H=%KSPDIR%
 
-set H=R:\KSP\KSP_1.12.5-Panda
+set H=R:\KSP\KSP_1.12.5-dev
 
 set GAMEDIR=Impact
 set GAMEDATA="GameData"
@@ -26,4 +26,4 @@ copy /Y Changelog.cfg %GAMEDATA%\%GAMEDIR%
 xcopy /y /s /I %GAMEDATA%\%GAMEDIR% "%H%\GameData\%GAMEDIR%"
 rem xcopy /y /s /I %GAMEDATA%\%GAMEDIR% "%DP0%\GameData\%GAMEDIR%"
 
-rem  pause
+ REM pause

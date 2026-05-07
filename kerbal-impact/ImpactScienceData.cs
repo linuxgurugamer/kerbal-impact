@@ -7,7 +7,7 @@ namespace kerbal_impact
 {
     public class ImpactScienceData : ScienceData
     {
-        public enum DataTypes{Seismic, Spectral, Asteroid};
+        public enum DataTypes{Seismic, Spectral, Asteroid, Density};
 
         private const string energyName = "KineticEnergy";
         private const string biomeName = "Biome";

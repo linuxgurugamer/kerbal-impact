@@ -1,5 +1,15 @@
 Changelog
 
+1.9.2 
+	Added launcher to fire projectiles at target
+	Added two projectiles, one spherical and one cylinderical, can be chosen in the editor.  cylinderical verison is slightly heavier
+		Thanks to @sinusoidalInanity and the rest of the BDArmory crew for assisting (ie: writing) the code for the Kinetic Impact Experiment	
+
+	Fixed title of Asteroid Contract
+	Added settings page, controls return to observer option
+	Added  ability to return to observer vessel after an impact
+	Fixed description of the high spectrometer
+
 1.9.1.2 
 	updated log line for spectrometric data to add data amount
 	Changed method of accessing unloaded Spectrometer modules to avoid NullRef Exceptions which happened some of the time

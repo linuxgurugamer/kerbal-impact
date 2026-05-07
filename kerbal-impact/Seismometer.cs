@@ -2,6 +2,7 @@
 using KSP.UI.Screens.Flight.Dialogs;
 using System.Collections.Generic;
 using System.Linq;
+using static kerbal_impact.ImpactMonitor;
 
 namespace kerbal_impact
 {
@@ -32,13 +33,13 @@ namespace kerbal_impact
 
         public static void OnSave(ConfigNode node, ImpactScienceData data)
         {
-            ImpactMonitor.Log("Saving seismometer");
+            Log("Saving seismometer");
 
             node.RemoveNodes("ScienceData"); //** Prevent duplicates            
             if (data != null)
             {
                 ConfigNode storedDataNode = node.AddNode("ScienceData");
-                ImpactMonitor.Log("saving data");
+                Log("saving data");
                 data.SaveImpact(storedDataNode);
             }
         }
@@ -50,7 +51,7 @@ namespace kerbal_impact
             if (node.HasNode("ScienceData"))
             {
                 ConfigNode storedDataNode = node.GetNode("ScienceData");
-                ImpactMonitor.Log("loading data");
+                Log("loading data");
                 ImpactScienceData data = new ImpactScienceData(storedDataNode);
                 if (newData.dataAmount < data.dataAmount || newData.kineticEnergy < data.kineticEnergy)
                 {
@@ -107,7 +108,7 @@ namespace kerbal_impact
 
         public void ReviewDataItem(ScienceData sd)
         {
-            ImpactMonitor.Log("Reviewing data from seismomenter");
+            Log("Reviewing data from seismomenter");
             ScienceLabSearch labSearch = new ScienceLabSearch(null, sd);
             expDialog = ExperimentsResultDialog.DisplayResult(new ExperimentResultDialogPage(part, sd, 1f, 0f, false, "", true, labSearch, DumpData, KeepData, TransmitData, null));
         }
@@ -150,7 +151,7 @@ namespace kerbal_impact
         }
         public void TransmitData(ScienceData data)
         {
-            ImpactMonitor.Log("Calling transmit data from seismomenter");
+            Log("Calling transmit data from seismomenter");
             expDialog = null;
             List<IScienceDataTransmitter> tranList = vessel.FindPartModulesImplementing<IScienceDataTransmitter>();
             if (tranList.Count > 0 && result != null)

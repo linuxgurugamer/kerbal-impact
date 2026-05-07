@@ -1,0 +1,118 @@
+Localization
+{
+	en-us
+	{
+
+		#loc_BDArmory_modname = Impactor Science
+		#loc_Impact_manufacturer = Applied Impacts LLC
+		#loc_Impact_Experiment_title = Kinetic Regolith Arrangement Transition Experiment Reactometer
+		#loc_Impact_Experiment_description = A light-weight Kinetic Impact experiment for measuring and determining composition of the surface of celestial bodies by shooting them with a specilized probe at high speed. Holds 6 impact probes for repeat sampling of one (or more) nearby asteroids, moons, or coments. Warranty void if used in or around the KSC.
+		#loc_Impact_Experiment_tags = impact experiment research rerun re-run reus re-us redo re-do reset re-set science sensor kinetic crater krater
+
+		#loc_Impact_Probe_title = Spherical
+		#loc_Impact_ProbeII_title = Cylindrical
+		#loc_Impact_Probe_description = A small Impact probe with a transmitter. Warranty void in case of crash.  Note:  The cylindrical version is slightly heaver than the spherical version
+
+
+		#LOC_Sesismometer_Tags = acceler experiment research science seismic seismo impact crash sensor
+		#LOC_Spectrometer_Tags = observ science flash telescop sensor lens camera
+		
+		#autoLOC_SeismicContract_Title = Record an impact with a seismometer of <<1>> on <<2>>
+		#autoLOC_SeismicContract_Blurb = We all like big bangs - and the scientists tell us they can be usefull.\n Crash a probe into <<1>> with at least <<2>> of kinetic energy and record the results with a sesimometer landed on <<1>>
+		#autoLOC_SeismicContract_Completed = Science data received
+
+		#autoLOC_SpectrumContractBiome_Title = Record an impact with a Spectrometer in <<1>> on <2>>
+		#autoLOC_SpectrumContractBiome_Blurb = We all like big bangs - and the scientists tell us they can be useful.\n Crash a probe into biome <<1>> on <<2>> and observe the results with a spectrometer in orbit
+		#autoLOC_SpectrumContractLat_Blurb = Record an impact with a Spectrometer into <<1>> above <<2>>Deg(N/S)
+		#autoLOC_SpectrumContractLat_Blurb = We all like big bangs - and the scientists tell us they can be useful.\n Crash a probe into <<1>> above <<2>>deg Latitude North or South and observe the results with a spectrometer in orbit
+		#autoLOC_SpectrumContract_Completed = Science data received
+
+		#autoLOC_AsteroidContract_Title = Record an impact with a Spectrometer with asteroid <<1>>
+		#autoLOC_AsteroidContract_Blurb = We all like big bangs - and the scientists tell us they can be usefull.\n Crash a probe into asteroid <<1>> orbiting <<2>> and observe the results with a spectrometer in orbit.\nThe spectometer must be within 500km of the impact
+		#autoLOC_AsteroidContract_Completed = Science data received
+
+		#autoLOC_AsteroidDensityContract_Title = Measure the density of an asteroid <<1>>
+		#autoLOC_AsteroidDensityContract_Blurb = We all like big bangs - and the scientists tell us they can be usefull.\n Ram a projectile asteroid <<1>> at low speed (<100m/sec) orbiting <<2>> and observe the results with a spectrometer in orbit.\nThe spectometer must be within 500km of the impact
+
+
+
+		#autoLOC_ImpactParam_KeTitle = Crash into <<1>> with <<2>>
+		#autoLOC_ImpactParam_LatTitle = Crash into <<1>> above <<2>>Deg (N/S)
+		#autoLOC_ImpactParam_BiomeTitle = Crash into <<1>> on <<2>>
+		#autoLOC_ImpactParam_AstTitle = Crash into <<1>>
+
+		#autoLOC_SciParam_KeTitle = Recover science data
+
+		#autoLOC_Screen_Seismic = Recorded seismic impact of <<1>> on <<2>>
+		#autoLOC_Screen_Spectrum = Recorded spectrographic impact data at <<1>> on <<2>>
+		#autoLOC_Screen_Asteroid = Recorded spectrographic impact data at <<1>> around <<2>>
+		#autoLOC_Screen_NoTrans = No transmitters available on this vessel.
+
+		#autoLOC_Screen_Density_Asteroid = Recorded Density impact data at <<1>> around <<2>>
+
+		#autoLOC_Seismometer_Title = Bang-O-meter
+		#autoLOC_Seismometer_Description = This is a seismometer.  It records the seismic waves created by a crash or an explosion. Warning: magnet and batteries not included. Contain small parts, not for children under 10 years old.
+		#autoLOC_Seismometer_Review = Review Data
+
+		#autoLOC_Spectrometer_Review = Review Data
+		#autoLOC_Spectrometer_Title = Flash-O-Meter (low orbit)
+		#autoLOC_HighSpectrometer_Title = Flash-O-Meter King Size (high orbit)
+		#autoLOC_Spectrometer_Description = This is a spectrometer.  It records the spectrum of the flash created by a crash or explosion.  It works best when it has a line of sight to the impact.  It only works in low orbit, not on the surface
+		
+		#autoLOC_SeisScience_Title = Seismic data
+		#autoLOC_SeisScience_default = Analysed seismic data.
+		#autoLOC_SeisScience_default2 = Truly a ground-breaking discovery!
+		#autoLOC_SeisScience_Mun = Seismic data reveals a smaller than expected metal core.
+		#autoLOC_SeisScience_Mun2 = Who's gonna notice another crater?
+		#autoLOC_SeisScience_Minmus = The data seems to be suggesting that Minmus has a core of chocolate chips.
+		#autoLOC_SeisScience_Minmus2 = You compare the seismic data against the composition of all known forms of kerbal desserts. Unfortunately, there are no matches.
+		#autoLOC_SeisScience_Moho = Moho appears to be hollow! Perhaps there is a way in somewhere?
+		#autoLOC_SeisScience_Moho2 = An ominous rumble of subterranean volcanic activity occurs shortly after the impact. Uh-oh.
+		#autoLOC_SeisScience_Gilly = You need to use some velcro to stop the probe being bounced of the surface. Gilly seems to be mostly gravel around a tiny core.
+		#autoLOC_SeisScience_Gilly2 = The impact has knocked Gilly ever so slightly off course. You ask Mission Control for permission to use another impactor to correct it.
+		#autoLOC_SeisScience_Dres = It's a rock.
+		#autoLOC_SeisScience_Dres2 = You consider carving your name into the surface using impactors. That should confuse the hell out of any future planetologists!
+		#autoLOC_SeisScience_Ike = The seismic waves have been completely muffled by Ike.
+		#autoLOC_SeisScience_Ike2 = Guess you don't like Ike.
+		#autoLOC_SeisScience_Tylo = Tylo is a solid shell of ice around a rocky core.
+		#autoLOC_SeisScience_Tylo2 = Seismic data reveals layer after layer of crystalline ice.
+		#autoLOC_SeisScience_Vall = Vall has slushy oceans under a thick blanket of ice.
+		#autoLOC_SeisScience_Vall2 = Seismic data is suggesting the presence of an extremely large internal ocean.
+		#autoLOC_SeisScience_Bop = The impact was followed by a series of vibrations like something rolling over in its sleep.
+		#autoLOC_SeisScience_Bop2 = Careful. You might awaken what lies beneath the deeps...
+		#autoLOC_SeisScience_Pol = Bless you!
+		#autoLOC_SeisScience_Pol2 = Pol's various rock formations are a lot more fragile than you thoguht they would be.
+		#autoLOC_SeisScience_Eeloo = Eeeloo is a layer of ice around a rocky core. You could have guessed that from looking.
+		#autoLOC_SeisScience_Eeloo2 = The seismometer seems to suggest that Eeloo undergoes occasional cryovolcanic activity. Neat!
+		
+		#autoLOC_SpecScience_Title = Spectrographic data
+		#autoLOC_SpecScience_default = Analysed spectral emission data.
+		#autoLOC_SpecScience_default2 = The spectrometer faithfully analyzes the flash caused by the impact.
+		#autoLOC_SpecScience_Mun = Pulverized regolith exploded outwards. It was grey.
+		#autoLOC_SpecScience_Mun2 = A thick cloud of mineral fragments and glassy particles obscures your view of the impact site.
+		#autoLOC_SpecScience_Minmus = Beautiful ice crystal glitter in the sunlight. You wonder if it would freshen your breath.
+		#autoLOC_SpecScience_Minmus2 = Spectroscopic analysis is negative on the presence of ice cream on Minmus' surface. We must go deeper.
+		#autoLOC_SpecScience_Moho = The impact ejecta is largely composed of heavier metals and silicates.
+		#autoLOC_SpecScience_Moho2 = This data reveals that Moho's surface is far less uniform than that of other worlds. A by-product of intense volacnic activity perhaps?
+		#autoLOC_SpecScience_Gilly = Gilly's spectroscopic data is consistent with that of a captured asteroid.
+		#autoLOC_SpecScience_Gilly2 = That impact ejecta looks like a good percentage of Gilly's total mass. You should probably put that back.
+		#autoLOC_SpecScience_Dres = Looks like pretty standard regolith with a bit of ice thrown in for good measure.
+		#autoLOC_SpecScience_Dres2 = Dres' surface was briefly lit up by the impact flash, allowing your craft to take some pretty good pictures.
+		#autoLOC_SpecScience_Ike = Some parts of Ike's surface appear to have strange light-absorbing properties. This requires further investigation.
+		#autoLOC_SpecScience_Ike2 = The spectrometer analyzes the spray of rocks ejected by the impact. They don't seem to differ very much in chemical composition.
+		#autoLOC_SpecScience_Tylo = The spectrometer should be able to explain Tylo's somewhat unusual bright, white surface.
+		#autoLOC_SpecScience_Tylo2 = Spectroscopic analysis confirms that Tylo's surface is mostly covered by a rhyolite layer of rock, nickel, and cobalt.
+		#autoLOC_SpecScience_Vall = Crystalline ice appears to dominate much of Vall's surface.
+		#autoLOC_SpecScience_Vall2 = The impact has created an interesting pattern of spiderweb-like cracks on Vall's surface.
+		#autoLOC_SpecScience_Bop = The spectrometer indicates that Bop's surface contains elements of iron oxide and solid carbon.
+		#autoLOC_SpecScience_Bop2 = The spectrometer's camera catches a glimpse of something large and green on Bop's surface. Further analysis remains inconclusive.
+		#autoLOC_SpecScience_Pol = The flash is somewhat contained by the spiky mountains dotting Pol's surface.
+		#autoLOC_SpecScience_Pol2 = The cloud of impact debris is making you want to sneeze.
+		#autoLOC_SpecScience_Eeloo = The brown on Eeloo seems to be made up of complex hdrocarbons, interesting.
+		#autoLOC_SpecScience_Eeloo2 = The flash indicates that your impactor has managed to penetrate deeply into Eeloo's icy crust.
+		
+		#autoLOC_AstScience_Title = Asteroid Spectral data
+		#autoLOC_AstScience_default = The most primitive minerals in the solar system are now coating the front of the spectrometer
+		#autoLOC_AstScience_Density_default = The density of the asteroid has been recorded.  Surprisingly massive for something so small
+	}
+}

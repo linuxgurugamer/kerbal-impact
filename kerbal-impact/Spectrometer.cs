@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static kerbal_impact.ImpactMonitor;
 
 namespace kerbal_impact
 {
@@ -165,13 +166,14 @@ namespace kerbal_impact
 
         public override void OnSave(ConfigNode node)
         {
+            Log("Saving spectrometer 1");
             OnSave(node, result);
         }
 
         public static void OnSave(ConfigNode node, ImpactScienceData data)
         {
-            ImpactMonitor.Log("Saving spectrometerr");
-
+            Log("Saving spectrometer 2");
+            DumpNode(node);
             node.RemoveNodes("ScienceData"); //** Prevent duplicates            
             if (data != null)
             {
@@ -183,7 +185,7 @@ namespace kerbal_impact
 
         internal static void NewResult(ConfigNode node, ImpactScienceData newData)
         {
-            ImpactMonitor.Log("Spectrometer.NewResult, kineticEnergy: " + newData.kineticEnergy + ", dataAmount: " + newData.dataAmount+ ", biome: " + newData.biome + ", latitude: " + newData.latitude +
+            Log("Spectrometer.NewResult, kineticEnergy: " + newData.kineticEnergy + ", dataAmount: " + newData.dataAmount+ ", biome: " + newData.biome + ", latitude: " + newData.latitude +
                 ", datatype: " + newData.datatype + ", situationMask: " + newData.situationMask);
 
             //only replace if it is better than any existing results
@@ -193,7 +195,7 @@ namespace kerbal_impact
                 ImpactScienceData data = new ImpactScienceData(storedDataNode);
                 if (newData.dataAmount <= data.dataAmount)
                 {
-                    ImpactMonitor.Log("Discarding because better data is already stored");
+                    Log("Discarding because better data is already stored");
                     return;
                 }
             }
@@ -212,6 +214,7 @@ namespace kerbal_impact
 
         public void ReturnData(ScienceData data)
         {
+            Log("Spectrometer.ReturnData");
             if (data != null)
             {
 
@@ -235,7 +238,7 @@ namespace kerbal_impact
             //only replace if it is better than any existing results
             if (result == null || newData.dataAmount > result.dataAmount)
             {
-                ImpactMonitor.Log("Trying to save impact");
+                Log("Trying to save impact");
                 result = newData;
             }
         }
@@ -258,7 +261,7 @@ namespace kerbal_impact
 
         public void ReviewData()
         {
-            ImpactMonitor.Log("ReviewData, GetScienceCount(): " + GetScienceCount());
+            Log("ReviewData, GetScienceCount(): " + GetScienceCount());
 
             if (GetScienceCount() < 1)
                 return;
@@ -270,6 +273,7 @@ namespace kerbal_impact
 
         public ScienceData[] GetData()
         {
+            Log("Spectrometer.GetData");
             if (result != null)
                 return new ImpactScienceData[] { result };
             else
@@ -278,6 +282,7 @@ namespace kerbal_impact
 
         public ImpactScienceData[] GetImpactData()
         {
+            Log("Spectrometer.GetImpactData");
             if (result != null)
                 return new ImpactScienceData[] { result };
             else
@@ -286,7 +291,7 @@ namespace kerbal_impact
 
         public void DumpData(ScienceData data)
         {
-            ImpactMonitor.Log("DumpData");
+            Log("DumpData");
             expDialog = null;
             result = null;
         }
@@ -297,7 +302,7 @@ namespace kerbal_impact
         }
         public void TransmitData(ScienceData data)
         {
-            ImpactMonitor.Log("TransmitData");
+            Log("TransmitData");
             expDialog = null;
             List<IScienceDataTransmitter> tranList = vessel.FindPartModulesImplementing<IScienceDataTransmitter>();
             if (tranList.Count > 0 && result != null)
@@ -310,6 +315,7 @@ namespace kerbal_impact
             }
             else ScreenMessages.PostScreenMessage(Localizer.Format("#autoLOC_Screen_NoTrans"), 4f, ScreenMessageStyle.UPPER_LEFT);
         }
+        
         [KSPEvent(guiActive = true, guiName = "#autoLOC_Spectrometer_Review", active = false)]
         public void reviewEvent()
         {

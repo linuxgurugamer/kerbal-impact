@@ -9,6 +9,9 @@ namespace kerbal_impact
     [KSPAddon(KSPAddon.Startup.PSystemSpawn, true)]
     class KerbalImpact : MonoBehaviour
     {
+        [KSPField]
+        int probeCnt;
+
         void Start()
         {
             ImpactMonitor.getInstance().Start();

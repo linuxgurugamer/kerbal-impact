@@ -1,0 +1,15 @@
+Fix code for :
+	4. Acoustic Ring-Down (“AST-RINGDOWN”)
+		What: Damped oscillation frequency from the shock—rough proxy for internal structure.
+		Trigger: 12–120 m/s, requires a seismometer to be on the ground somewhere.
+		Scaling: Heavier asteroids and “clean” normal impacts reward more.
+
+	MUST DO:  to be done on a seismometer on the surface  - Need to test
+
+	Implement AsteroidImpactSensor in ImpactMonitor for unloaded vessels
+
+	Fix GuessAsteroidClassFromMass to use adjusted values, if any
+
+	Add contracts for new experiments
+
+	

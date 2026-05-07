@@ -1,0 +1,36 @@
+New Experiments (impact-triggered)
+
+ImpactSeismometer
+1. Impulse Seismology (“AST-SEIS”)
+	What: Peak ground acceleration from the impact.
+	Trigger: 12–150 m/s impact on an asteroid.
+	Scaling: More science on larger/denser classes (C/D/E) and higher impact speeds, with diminishing returns.
+	Use: Great baseline “worked/didn’t work” experiment.
+
+ImpactSpectrometer
+2. Volatile Flash-Spectrometry (“AST-VOLATILES”)
+	What: Looks for short-lived signatures (water/CO/CO?) liberated by the shock.
+	Trigger: 30–200 m/s, bonus on carbonaceous/icy rocks.
+	Scaling: Big bump if incoming velocity is 60–120 m/s (sweet spot for flash release without total pulverization).
+
+
+
+1. Regolith Ejecta Profiling (“AST-EJECTA”)
+	What: Estimates ejecta mass/velocity distribution from the first 0.2 s after impact.
+	Trigger: 25–200 m/s.
+	Scaling: Higher science if local gravity is low and impact angle is shallow; penalize very glancing hits.
+
+2. Magneto-Dust Response (“AST-MAGDUST”)
+	What: Transient magnetic perturbation from charged dust plume.
+	Trigger: 15–150 m/s.
+	Scaling: Larger returns for metallic (high-density) asteroids and for fast, compact impactors.
+
+3. Surface Albedo Change (“AST-ALBEDO”)
+	What: Pre/post-impact photometry snapshot to estimate exposed subsurface material.
+	Trigger: any confirmed impact (>10 m/s) followed by 2–30 s of visibility.
+	Scaling: More science if the albedo delta exceeds a threshold; reduced in deep shadow or if you immediately despawn.
+
+4. Acoustic Ring-Down (“AST-RINGDOWN”)
+	What: Damped oscillation frequency from the shock—rough proxy for internal structure.
+	Trigger: 12–120 m/s, requires a seismometer to be on the ground somewhere.
+	Scaling: Heavier asteroids and “clean” normal impacts reward more.
