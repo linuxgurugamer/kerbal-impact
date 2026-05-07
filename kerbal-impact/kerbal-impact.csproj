@@ -47,7 +47,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>AssemblyVersion.tt</DependentUpon>
     </Compile>
-    <Compile Include="AsteroidDensityReader .cs" />
+    <Compile Include="AsteroidDensityReader.cs" />
     <Compile Include="AsteroidImpactSensor.cs" />
     <Compile Include="AsteroidSpectrumContract.cs" />
     <Compile Include="Cannon.cs" />
